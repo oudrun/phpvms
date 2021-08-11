@@ -1,4 +1,4 @@
-FROM php:7.4-fpm-alpine
+FROM php:8.0.9-fpm-alpine
 
 WORKDIR /var/www/
 
@@ -16,8 +16,15 @@ RUN docker-php-ext-install \
   pdo_mysql \
   gd \
   gmp \
+  bcmath \
   opcache && \
-  docker-php-ext-enable pdo_mysql opcache
+  docker-php-ext-enable pdo_mysql bcmath opcache
+
+RUN apk add --no-cache \
+      libzip-dev \
+      zip \
+    && docker-php-ext-install zip
+
 
 COPY . /var/www/
 RUN php composer.phar install \
